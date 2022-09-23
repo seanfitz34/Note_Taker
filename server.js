@@ -12,13 +12,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // use public folder
 app.use(express.static("public"));
-// path to index.html
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "/public/index.html"));
-});
+
 // path to notes.html
 app.get("/notes", (req, res) => {
   res.sendFile(path.join(__dirname, "/public/notes.html"));
+});
+
+// path to index.html
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
 // get db.json data
