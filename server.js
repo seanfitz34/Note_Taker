@@ -36,27 +36,25 @@ app.get("/api/notes", (req, res) => {
 
 // update db.json
 app.post("/api/notes", (req, res) => {
+  req.body.id = uuidv4();
   const newNote = req.body;
-
-  if (newNote) {
-    fs.readFile("./db/db.json", "utf8", (err, data) => {
-      if (err) {
-        console.error(err);
-      } else {
-        newNote.id = uuidv4(); // new unique id
-        const unzipData = JSON.parse(data);
-        unzipData.push(newNote);
-       
-       
-        fs.writeFile("./db/db.json", JSON.stringify(unzipData), (err) => {
-          err ? console.error(err) : console.log("Update Successful!");
-          res.json(newNote);
-        });
-      }
-    });
-  } else {
-    console.error("Error");
-  }
+  notes.push(newNote);
+  fs.writeFileSync(
+    path.join(__dirname, "./db/db.json"),
+    JSON.stringify({ notes }, null, 2)
+  );
+  res.json(notes);
+});
+// Delete notes
+app.delete("/api/notes/:id", (req, res) => {
+  const id = req.params.id;
+  const noteIndex = notes.findIndex((n) => n.id == id);
+  notes.splice(noteIndex, 1);
+  fs.writeFileSync(
+    path.join(__dirname, "./db/db.json"),
+    JSON.stringify({ notes }, null, 2)
+  );
+  res.json(notes);
 });
 
 app.listen(PORT, () => console.log(`Now listening on port ${PORT}`));
