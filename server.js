@@ -41,7 +41,7 @@ app.post("/api/notes", (req, res) => {
       if (err) {
         console.error(err);
       } else {
-        newNote.id = uuidv4(); // give each note a unique ID
+        newNote.id = uuidv4(); // new unique id
         const unzipData = JSON.parse(data);
         unzipData.push(newNote);
         fs.writeFile("./db/db.json", JSON.stringify(unzipData), (err) => {
@@ -55,6 +55,4 @@ app.post("/api/notes", (req, res) => {
   }
 });
 
-app.listen(PORT, () =>
-  console.log(`Now listening at http://localhost:${PORT}`)
-);
+app.listen(PORT, () => console.log(`Now listening on port ${PORT}`));
