@@ -38,7 +38,7 @@ app.get("/api/notes", (req, res) => {
 app.post("/api/notes", (req, res) => {
   const newNote = req.body;
 
-  if (req.body) {
+  if (newNote) {
     fs.readFile("./db/db.json", "utf8", (err, data) => {
       if (err) {
         console.error(err);
@@ -46,6 +46,8 @@ app.post("/api/notes", (req, res) => {
         newNote.id = uuidv4(); // new unique id
         const unzipData = JSON.parse(data);
         unzipData.push(newNote);
+       
+       
         fs.writeFile("./db/db.json", JSON.stringify(unzipData), (err) => {
           err ? console.error(err) : console.log("Update Successful!");
           res.json(newNote);
