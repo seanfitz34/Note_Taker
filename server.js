@@ -10,49 +10,48 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// use public folder
 app.use(express.static("public"));
-
 // path to index.html
-app.get("/", (req, res) => {
+app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "/public/index.html"));
 });
-
 // path to notes.html
 app.get("/notes", (req, res) => {
   res.sendFile(path.join(__dirname, "/public/notes.html"));
 });
 
-// Connect back-end to front-end
-
+// get db.json data
 app.get("/api/notes", (req, res) => {
   fs.readFile("./db/db.json", "utf8", (err, data) => {
     if (err) {
       console.error(err);
     }
-    const dbData = JSON.parse(data);
-    res.json(dbData);
+    const sendData = JSON.parse(data);
+    res.json(sendData);
   });
 });
 
+// update db.json
 app.post("/api/notes", (req, res) => {
-  const note = req.body;
+  const newNote = req.body;
 
   if (req.body) {
     fs.readFile("./db/db.json", "utf8", (err, data) => {
       if (err) {
         console.error(err);
       } else {
-        note.id = uuidv4(); // unique id for each note
-        const dataParsed = JSON.parse(data);
-        dataParsed.push(note);
-        fs.writeFile("./db/db.json", JSON.stringify(dataParsed), (err) => {
-          err ? console.error(err) : console.log("Update Successful");
-          res.json(note);
+        newNote.id = uuidv4(); // give each note a unique ID
+        const unzipData = JSON.parse(data);
+        unzipData.push(newNote);
+        fs.writeFile("./db/db.json", JSON.stringify(unzipData), (err) => {
+          err ? console.error(err) : console.log("Update Successful!");
+          res.json(newNote);
         });
       }
     });
   } else {
-    console.error("Error adding tip");
+    console.error("Error");
   }
 });
 
