@@ -45,16 +45,5 @@ app.post("/api/notes", (req, res) => {
   );
   res.json(notes);
 });
-// Delete notes
-app.delete("/api/notes/:id", (req, res) => {
-  const id = req.params.id;
-  const noteIndex = notes.findIndex((n) => n.id == id);
-  notes.splice(noteIndex, 1);
-  fs.writeFileSync(
-    path.join(__dirname, "./db/db.json"),
-    JSON.stringify({ notes }, null, 2)
-  );
-  res.json(notes);
-});
 
 app.listen(PORT, () => console.log(`Now listening on port ${PORT}`));
